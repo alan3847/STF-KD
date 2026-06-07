@@ -1,0 +1,58 @@
+PYTHONDONTWRITEBYTECODE=1 python -m tools.train_kd_unified \
+  -d mmnist \
+  --config_file ./configs/mmnist/ConvLSTM.py \
+  --student_method convlstm \
+  --teacher_method simvp \
+  --teacher_config_file ./configs/mmnist/simvp/SimVP_gSTA.py \
+  --teacher_ckpt ./work_dirs/mmnist_simvp_s_gsta_one_ep200/mmnist_simvp_s_gsta_one_ep200.pth \
+  --kd_weight 0.5 \
+  --data_root ./data \
+  --ex_name kd_mmnist_simvp_teacher_convlstm_student
+
+PYTHONDONTWRITEBYTECODE=1 python -m tools.train_fakd_unified \
+  -d mmnist \
+  --config_file ./configs/mmnist/ConvLSTM.py \
+  --student_method convlstm \
+  --teacher_method simvp \
+  --teacher_config_file ./configs/mmnist/simvp/SimVP_gSTA.py \
+  --teacher_ckpt ./work_dirs/mmnist_simvp_s_gsta_one_ep200/mmnist_simvp_s_gsta_one_ep200.pth \
+  --teacher_hint_layer model.enc \
+  --student_hint_layer model.cell_list.3 \
+  --teacher_hint_output_index 0 \
+  --student_hint_output_index 0 \
+  --hint_teacher_channels 64 \
+  --hint_student_channels 128 \
+  --kd_weight 0.5 \
+  --fakd_weight 1.0 \
+  --freq_alpha 1.0 \
+  --freq_cutoff 0.25 \
+  --freq_loss_type magnitude \
+  --data_root ./data \
+  --ex_name fakd_mmnist_simvp_teacher_convlstm_student
+
+PYTHONDONTWRITEBYTECODE=1 python -m tools.train_fakd_unified \
+  -d mmnist \
+  --config_file ./configs/mmnist/ConvLSTM.py \
+  --student_method convlstm \
+  --teacher_method simvp \
+  --teacher_config_file ./configs/mmnist/simvp/SimVP_gSTA.py \
+  --teacher_ckpt ./work_dirs/mmnist_simvp_s_gsta_one_ep200/mmnist_simvp_s_gsta_one_ep200.pth \
+  --teacher_hint_layer model.hid \
+  --student_hint_layer model.cell_list.3 \
+  --teacher_hint_output_index 0 \
+  --student_hint_output_index 0 \
+  --hint_teacher_channels 64 \
+  --hint_student_channels 128 \
+  --hint_reduce mean \
+  --kd_weight 0.5 \
+  --fakd_weight 0.02 \
+  --freq_alpha 1.0 \
+  --freq_cutoff 0.25 \
+  --freq_loss_type magnitude \
+  --freq_norm rms \
+  --freq_eps 1e-6 \
+  --freq_log_mag False \
+  --output_kd True \
+  --data_root ./data \
+  --ex_name fakd_mmnist_simvp_teacher_convlstm_student
+
