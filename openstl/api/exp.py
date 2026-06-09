@@ -7,15 +7,6 @@ from fvcore.nn import FlopCountAnalysis, flop_count_table
 
 import torch
 
-from openstl.methods_vanilla import method_maps as vanilla_method_maps
-from openstl.methods_fitnet import method_maps as hidden_layer_method_maps
-from openstl.methods_fakd import method_maps as fakd_method_maps
-
-method_maps = {
-    **vanilla_method_maps,
-    **hidden_layer_method_maps,
-    **fakd_method_maps,
-}
 
 from openstl.datasets import BaseDataModule
 from openstl.utils import (get_dataset, measure_throughput, SetupCallback, EpochEndCallback, BestCheckpointCallback)
@@ -147,10 +138,6 @@ class BaseExperiment(object):
             input_dummy = (_tmp_input, _tmp_flag)
         elif args.method == 'prednet':
            input_dummy = torch.ones(1, 1, C, H, W, requires_grad=True).to(device)
-        elif args.method in ['kd', 'fitnet_kd', 'fakd_kd']:
-            student_method = getattr(args, 'student_method', None)
-            if student_method is None:
-                raise ValueError('KD mode requires `student_method` for display_method_info.')
 
             student_method = student_method.lower()
 

@@ -83,9 +83,6 @@ def create_parser():
                             'SwinLSTM', 'swinlstm',
                             'swinlstm_d', 'swinlstm_b',
                             'WaST', 'wast',
-                            'KD', 'kd',
-                            'FitNetKD', 'fitnet_kd',
-                            'FAKDKD', 'fakd_kd'
                         ],
                         help='Name of video prediction method to train (default: "SimVP")')
     parser.add_argument('--config_file', '-c', default=None, type=str,
@@ -124,8 +121,6 @@ def create_parser():
     parser.add_argument('--hint_reduce', default='last', choices=['last', 'mean'])
     parser.add_argument('--teacher_hint_output_index', default=0, type=int)
     parser.add_argument('--student_hint_output_index', default=0, type=int)
-    parser.add_argument('--fakd_weight', default=1.0, type=float,
-                        help='Weight of frequency-aligned KD loss')
     parser.add_argument('--freq_alpha', default=1.0, type=float,
                         help='Weight for low-frequency loss: high + alpha * low')
     parser.add_argument('--freq_cutoff', default=0.25, type=float,
@@ -134,8 +129,6 @@ def create_parser():
                         help='Frequency loss type')
     parser.add_argument('--output_kd', type=str2bool, nargs='?', const=True, default=True,
                         help='Whether to keep output-level KD loss')
-    parser.add_argument('--freq_norm', default='rms', choices=['none', 'rms', 'standard'],
-                    help='Feature normalization before FFT for FAKD')
     parser.add_argument('--freq_eps', default=1e-6, type=float,
                         help='Epsilon for frequency feature normalization')
     parser.add_argument('--freq_log_mag', type=str2bool, nargs='?', const=True, default=False,
@@ -224,7 +217,6 @@ def default_parser():
         'fps': False,
         'test': False,
         'deterministic': False,
-        'fakd_weight': 1.0,
         'freq_alpha': 1.0,
         'freq_cutoff': 0.25,
         'freq_loss_type': 'complex',
